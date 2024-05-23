@@ -1,9 +1,14 @@
-import './App.css';
 import { CurriculumPage } from './pages';
+import { CssReset, GlobalStyles } from './styles';
 
 function App() {
   return (
-    <CurriculumPage />
+    <>
+      <CssReset />
+      <GlobalStyles />
+
+      <CurriculumPage />
+    </>
   );
 }
 
