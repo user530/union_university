@@ -5,7 +5,6 @@ import { remy, UnorderedList } from '../../styles';
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import React from 'react';
 import { useMediaQuery } from 'react-responsive';
-import { theme } from '../../../themes/theme';
 
 interface IModuleProps extends IProgrammeModule { }
 
@@ -36,7 +35,11 @@ const StyledSingleModule = styled.div`
     }
 `;
 
-const StyledModuleTitle = styled.div<{ expanded?: string }>`
+interface IExpandable {
+    $expanded?: string
+}
+
+const StyledModuleTitle = styled.div<IExpandable>`
     flex-shrink: 0;
 
     @media(max-width: 767px) {
@@ -48,7 +51,7 @@ const StyledModuleTitle = styled.div<{ expanded?: string }>`
         column-gap: ${remy(27)};
         transition: 0.3s;
 
-        ${({ expanded, theme }) => expanded === 'true'
+        ${({ $expanded, theme }) => $expanded === 'true'
         ? `
         background-color: ${theme.colors.primary};
         color: ${theme.colors.white};
@@ -64,15 +67,14 @@ const StyledModuleTitle = styled.div<{ expanded?: string }>`
     }
 `;
 
-interface IStyledIcon {
+interface IStyledIcon extends IExpandable {
     visible?: string;
     size?: string;
-    expanded?: string;
 }
 
 const StyledIcon = styled.div<IStyledIcon>`
     display: ${({ visible }) => visible === 'true' ? 'block' : 'none'};
-    color: ${({ expanded, theme }) => expanded === 'false' && (theme.colors.extraIcons || 'black')};
+    color: ${({ $expanded, theme }) => $expanded === 'false' && (theme.colors.extraIcons || 'black')};
     ${({ size }) => size
         ? `
     width: ${size};
@@ -92,12 +94,12 @@ const StyledH4 = styled.h4`
     }
 `;
 
-const StyledModuleContent = styled.div<{ expanded?: string }>`
+const StyledModuleContent = styled.div<IExpandable>`
     flex-grow: 1;
     padding-top: ${remy(7)};
 
     @media(max-width: 767px) {
-        display: ${({ expanded }) => expanded === 'true' ? 'block' : 'none'};
+        display: ${({ $expanded }) => $expanded === 'true' ? 'block' : 'none'};
         
         color: ${({ theme }) => theme.colors.textBlack};
         padding-block: ${remy(17)} ${remy(7)};
@@ -129,19 +131,19 @@ export const Module: FC<IModuleProps> = ({ title, disciplines }) => {
     return (
         <StyledSingleModule>
             <StyledModuleTitle
-                expanded={`${isExpanded}`}
+                $expanded={`${isExpanded}`}
                 onClick={moduleClickHandler}
             >
                 <StyledIcon
                     as={isExpanded ? AiOutlineMinus : AiOutlinePlus}
                     visible={`${isMobile}`}
-                    expanded={`${isExpanded}`}
+                    $expanded={`${isExpanded}`}
                 />
 
                 <StyledH4>{title}</StyledH4>
             </StyledModuleTitle>
 
-            <StyledModuleContent expanded={`${isExpanded}`}>
+            <StyledModuleContent $expanded={`${isExpanded}`}>
                 <StyledModuleList>
                     {
                         disciplines.map(

@@ -15,10 +15,10 @@ interface IGeneralModuleListProps extends IGeneralModuleProps {
     data: string[];
 }
 
-const StyledCard = styled.div<{ accented?: string }>`
+const StyledCard = styled.div<{ $accented?: string }>`
     padding: ${remy(52)} ${remy(57)};
     color: ${({ theme }) => theme.colors.white};
-    background-color: ${({ accented, theme }) => accented === 'true' ? theme.colors.primary : theme.colors.secondary};
+    background-color: ${({ $accented, theme }) => $accented === 'true' ? theme.colors.primary : theme.colors.secondary};
     position: relative;
 
     font-size: ${remy(20)};
@@ -33,7 +33,7 @@ const StyledCard = styled.div<{ accented?: string }>`
         width: ${remy(43)};
         height: ${remy(43)};
         
-        ${({ accented, theme }) => accented === 'true'
+        ${({ $accented, theme }) => $accented === 'true'
         && `background: linear-gradient(-135deg, ${theme.colors.white} 50%, ${theme.colors.primaryAlt} 50%)`}
     }
 
@@ -76,7 +76,7 @@ const StyledCardList = styled(UnorderedList)`
 
 const GeneralModule: FC<IGeneralModuleProps> = ({ title, isAccented, children }) => {
     return (
-        <StyledCard accented={`${isAccented}`}>
+        <StyledCard $accented={`${isAccented}`}>
             <StyledCartTitle>
                 {title}
             </StyledCartTitle>
