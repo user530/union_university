@@ -36,7 +36,8 @@ export const GlobalStyles = createGlobalStyle`
   /* Global Styles */
     body {
         font-family: 'Styrene A Web', sans-serif;
-        background-color: #fff;
-        color: #000;
+        background-color: ${({ theme }) => theme.colors.white};
+        color: ${({ theme }) => theme.colors.black};
+        line-height: 1.2;
     }
 `;
