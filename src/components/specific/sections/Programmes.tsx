@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import type { IProgramme } from '../../../types';
 import { Programme } from '../articles';
+import { StyledContainer } from '../../styles';
 
 interface IProgrammesProps {
     displayAmount: number;
@@ -360,11 +361,13 @@ export const Programmes: FC<IProgrammesProps> = ({ displayAmount }) => {
 
     return (
         <section>
-            {
-                programmes.slice(0, displayAmount).map(
-                    (programme) => <Programme key={programme.id} {...programme} />
-                )
-            }
+            <StyledContainer >
+                {
+                    programmes.slice(0, displayAmount).map(
+                        (programme) => <Programme key={programme.id} {...programme} />
+                    )
+                }
+            </StyledContainer>
         </section>
     );
 }
