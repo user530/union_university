@@ -4,7 +4,9 @@ import { Module } from '../cards/Module';
 import styled from 'styled-components';
 import { remy } from '../../styles';
 
-interface IProgrammeProps extends IProgramme { }
+interface IProgrammeProps {
+    programme: null | IProgramme;
+}
 
 const StyledArticle = styled.article`
     & + & {
@@ -38,7 +40,11 @@ const StyledArticleContent = styled.div`
     }
 `;
 
-export const Programme: FC<IProgrammeProps> = ({ title, modules }) => {
+export const Programme: FC<IProgrammeProps> = ({ programme }) => {
+    if (!programme)
+        return <div>Spinner</div>;
+
+    const { title, modules } = programme;
     return (
         <StyledArticle>
             <StyledH3>{title}</StyledH3>
