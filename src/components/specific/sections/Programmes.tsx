@@ -1,15 +1,18 @@
 import type { FC } from 'react';
-import type { IProgramme } from '../../../types';
+import type { IProduct, IProgramme } from '../../../types';
 import { Programme } from '../articles';
 import { StyledContainer } from '../../styles';
 import React from 'react';
+import { fetchProgrammes } from '../../../services/api';
+import { validateProgramme } from '../../../services/validateData';
+import { transformData } from '../../../services/transformData';
 
 interface IProgrammesProps {
     displayAmount: number;
 }
 
 export const Programmes: FC<IProgrammesProps> = ({ displayAmount }) => {
-    // const programmes: IProgramme[] = [
+    // const programmes1: IProgramme[] = [
     //     {
     //         id: 1,
     //         title: 'Антикризисное управление',
@@ -362,13 +365,86 @@ export const Programmes: FC<IProgrammesProps> = ({ displayAmount }) => {
     const [programmes, setProgrammes] = React.useState<(null | IProgramme)[]>(
         new Array(displayAmount).fill(null)
     );
+    const controllerRef = React.useRef(new AbortController());
+    const dataCounter = React.useRef(0);
+    const offset = React.useRef(0);
+
+    React.useEffect(() => {
+        const controller = controllerRef.current;
+
+        const fetchAndFill = async () => {
+            try {
+                while (dataCounter.current < displayAmount && offset.current < 20) {
+                    const batchData = await fetchProgrammes(
+                        '/products',
+                        displayAmount - dataCounter.current,
+                        offset.current,
+                        controller
+                    );
+
+                    console.log('Batch data: ', batchData);
+
+                    const toAdd: IProgramme[] = [];
+
+                    batchData.forEach(
+                        (programm: IProduct) => {
+                            if (
+                                !validateProgramme(programm)
+                                || dataCounter.current >= displayAmount
+                            )
+                                return;
+
+                            toAdd.push(transformData(programm));
+                        }
+                    );
+
+                    console.log('To add: ', toAdd);
+
+                    if (toAdd.length > 0)
+                        setProgrammes(
+                            (current) => {
+                                const newProgrammes = [...current];
+                                console.log('Current proggrames ', newProgrammes);
+                                console.log('Current counter: ', dataCounter.current);
+                                toAdd.forEach(
+                                    (item, index) => {
+                                        console.log(item, index)
+                                        if (!item) return;
+                                        newProgrammes[dataCounter.current++] = item;
+                                    }
+                                );
+                                console.log('After the addition ', newProgrammes);
+                                console.log('counter: ', dataCounter.current);
+                                return newProgrammes;
+                            }
+                        );
+
+                    offset.current += batchData.length;
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchAndFill();
+
+        return () => {
+            controller.abort();
+            controllerRef.current = new AbortController();
+        };
+    },
+        [displayAmount]
+    );
 
     return (
         <section>
             <StyledContainer >
                 {
-                    programmes.slice(0, displayAmount).map(
-                        (programme, ind) => <Programme key={(programme && programme.id) ?? ind} programme={programme} />
+                    programmes.map(
+                        (programme, ind) => <Programme
+                            key={(programme && programme.id) ?? ind}
+                            programme={programme}
+                        />
                     )
                 }
             </StyledContainer>

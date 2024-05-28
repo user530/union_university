@@ -3,6 +3,7 @@ import type { IProgramme } from '../../../types';
 import { Module } from '../cards/Module';
 import styled from 'styled-components';
 import { remy } from '../../styles';
+import React from 'react';
 
 interface IProgrammeProps {
     programme: null | IProgramme;
@@ -40,11 +41,14 @@ const StyledArticleContent = styled.div`
     }
 `;
 
-export const Programme: FC<IProgrammeProps> = ({ programme }) => {
+export const Programme: FC<IProgrammeProps> = React.memo(({ programme }) => {
+    console.log('Rendered Programme ', programme?.id);
+
     if (!programme)
         return <div>Spinner</div>;
 
     const { title, modules } = programme;
+
     return (
         <StyledArticle>
             <StyledH3>{title}</StyledH3>
@@ -57,4 +61,4 @@ export const Programme: FC<IProgrammeProps> = ({ programme }) => {
             </StyledArticleContent>
         </StyledArticle>
     );
-}
+});

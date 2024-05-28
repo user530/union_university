@@ -12,4 +12,4 @@ export interface IProgrammeModule {
     disciplines: IDiscipline[];
 }
 
-interface IDiscipline extends ISkill { }
+export interface IDiscipline extends ISkill { }
