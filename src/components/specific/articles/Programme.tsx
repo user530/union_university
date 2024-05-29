@@ -4,6 +4,7 @@ import { Module } from '../cards/Module';
 import styled from 'styled-components';
 import { remy } from '../../styles';
 import React from 'react';
+import { Spinner } from '../../common/Spinner';
 
 interface IProgrammeProps {
     programme: null | IProgramme;
@@ -45,7 +46,7 @@ export const Programme: FC<IProgrammeProps> = React.memo(({ programme }) => {
     console.log('Rendered Programme ', programme?.id);
 
     if (!programme)
-        return <div>Spinner</div>;
+        return <Spinner />;
 
     const { title, modules } = programme;
 
